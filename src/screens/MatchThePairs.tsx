@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View, Text } from "react-native";
+import { SafeAreaView, StyleSheet, View, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { StatsCard, GameCard } from "components/cards";
@@ -7,6 +7,7 @@ import { Button } from "components/buttons";
 import { Spacing, Colors } from "constants/index";
 
 import { useMatchGame } from "hooks/useMatchGame";
+import { useEffect } from "react";
 
 const ROWS = [
   [0, 1, 2, 3],
@@ -24,11 +25,31 @@ const MatchThePairs = () => {
     matchedCards,
     comparisonCards,
     totalMoves,
+    totalPairs,
+    matchCount,
   } = useMatchGame();
 
   const handlePress = (index: number) => {
     chooseCard(index);
   };
+
+  useEffect(() => {
+    if (matchCount === totalPairs) {
+      Alert.alert(
+        "Congratulation",
+        "Wanna play again",
+        [
+          {
+            text: "No",
+
+            style: "cancel",
+          },
+          { text: "Yes", onPress: () => reset() },
+        ],
+        { cancelable: false }
+      );
+    }
+  }, [totalMoves]);
 
   return (
     <SafeAreaView style={styles.container}>
